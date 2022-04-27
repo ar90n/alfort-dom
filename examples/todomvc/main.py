@@ -1,47 +1,47 @@
 # ported from https://github.com/tastejs/todomvc/blob/master/examples/elm/src/Main.elm
+from dataclasses import asdict, dataclass, replace
+from functools import wraps
+from typing import Any, TypeAlias, Union
 
-from dataclasses import dataclass, replace, asdict
+from alfort import Effect, Update
+from alfort.vdom import VDom, el
+from js import document, localStorage
 
 from alfort_dom import AlfortDom
 
-from alfort import Dispatch, Effect, Update
-from alfort.vdom import VDom, el
-from typing import Union, TypeAlias, Any
 
-import json
-from functools import wraps
-#from browser.local_storage import storage
-#from browser import document, timer
+def save_model(model: "Model") -> None:
+    localStorage.setItem("todos-alfort", str(asdict(model)))
 
 
-# def save_model(model: "Model") -> None:
-#     storage["todos-alfort"] = str(asdict(model))
+def load_model() -> "Model":
+    serialized_model: str = localStorage.getItem("todos-alfort")
+    if serialized_model is None:
+        return Model(entries=[], field="", uid=0, visibility="all")
+
+    obj = eval(serialized_model)
+    obj["entries"] = [Entry(**e) for e in obj["entries"]]
+    return Model(**obj)
 
 
-# def load_model() -> "Model":
-#     obj = eval(storage.get("todos-alfort", "{}"))
-#     obj["entries"] = [Entry(**e) for e in obj["entries"]]
-#     return Model(**obj)
+def with_local_storage(update: Update["Msg", "Model"]) -> Update["Msg", "Model"]:
+    @wraps(update)
+    def _update(msg: Msg, model: Model) -> tuple[Model, list[Effect[Msg]]]:
+        model, effects = update(msg, model)
+        return model, [lambda _: save_model(model), *effects]
+
+    return _update
 
 
-# def with_local_storage(update: Update["Msg", "Model"]) -> Update["Msg", "Model"]:
-#     @wraps(update)
-#     def _update(msg: Msg, model: Model) -> tuple[Model, list[Effect[Msg]]]:
-#         model, effects = update(msg, model)
-#         return model, [lambda _: save_model(model), *effects]
-
-#     return _update
+def visibility_from_url() -> str:
+    visibility = document.location.hash.strip("#/")
+    if visibility not in ["all", "active", "completed"]:
+        visibility = "all"
+    return visibility
 
 
-# def visibility_from_url() -> str:
-#     visibility = document.location.hash.strip("#/")
-#     if visibility not in ["all", "active", "completed"]:
-#         visibility = "all"
-#     return visibility
-
-
-# def focus(id_: int) -> None:
-#     timer.set_timeout(lambda: document.getElementById(f"todo-{id_}").focus(), 32)
+def focus(id_: int) -> None:
+    document.getElementById(f"todo-{id_}").focus()
 
 
 # Model
@@ -64,8 +64,7 @@ class Model:
 
 
 def init() -> tuple[Model, list[Effect["Msg"]]]:
-    # model = replace(load_model(), visibility=visibility_from_url())
-    model = Model(entries=[], field="", uid=0, visibility="all")
+    model = replace(load_model(), visibility=visibility_from_url())
     return (model, [])
 
 
@@ -145,7 +144,7 @@ Msg: TypeAlias = Union[
 ]
 
 
-#@with_local_storage
+@with_local_storage
 def update(msg: Msg, model: Model) -> tuple[Model, list[Effect[Msg]]]:
     match msg:
         case NoOp():
@@ -158,7 +157,6 @@ def update(msg: Msg, model: Model) -> tuple[Model, list[Effect[Msg]]]:
         case UpdateField(field):
             return (replace(model, field=field), [])
         case EditingEntry(id_, is_editing):
-            id_ = id_  # type: ignore
             return (
                 replace(
                     model,
@@ -167,8 +165,7 @@ def update(msg: Msg, model: Model) -> tuple[Model, list[Effect[Msg]]]:
                         for e in model.entries
                     ],
                 ),
-                [],
-                #[lambda _: focus(id_)],
+                [lambda _: focus(id_)],
             )
         case UpdateEntry(id_, task):
             return (
@@ -242,10 +239,12 @@ def view(model: Model) -> VDom:
 def view_input_on_input(event: Any) -> Msg:
     return UpdateField(event.target.value)
 
+
 def view_input_on_keydown(event: Any) -> Msg:
     if event.type == "keydown" and event.key == "Enter":
         return Add()
     return NoOp()
+
 
 def view_input(task: str) -> VDom:
 
@@ -318,6 +317,7 @@ def view_entries(visibility: str, entries: list[Entry]) -> VDom:
 
 # View individual entries
 
+
 class Handler:
     def __init__(self, fun: Any, key: int):
         self.key = key
@@ -327,18 +327,16 @@ class Handler:
         return self.fun(*args, **kwargs)
 
     def __eq__(self, other: Any) -> bool:
-        #print("__eq__")
         if not isinstance(other, Handler):
             return False
-        #print(self.key, other.key)
         return self.key == other.key
-def eq_handler(key: int) -> Any:
 
+
+def eq_handler(key: int) -> Any:
     def _f(f: Any) -> Any:
         return Handler(f, key)
+
     return _f
-
-
 
 
 def view_entry(todo: Entry) -> VDom:

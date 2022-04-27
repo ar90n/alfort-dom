@@ -1,13 +1,10 @@
 from dataclasses import dataclass
-
-from alfort_dom import AlfortDom
+from typing import TypeAlias, Union
 
 from alfort import Effect
-from alfort.vdom import (
-    VDom,
-    el,
-)
-from typing import Union, TypeAlias
+from alfort.vdom import VDom, el
+
+from alfort_dom import AlfortDom
 
 
 @dataclass(frozen=True)

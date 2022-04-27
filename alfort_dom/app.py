@@ -1,7 +1,4 @@
-from typing import Any, Callable, TypeVar, Generic
-
-from js import document
-from pyodide import JsProxy, to_js, create_proxy
+from typing import Any, Callable, Generic, TypeVar
 
 from alfort import Alfort, Dispatch, Init, Update, View
 from alfort.vdom import (
@@ -13,6 +10,8 @@ from alfort.vdom import (
     PatchText,
     Props,
 )
+from js import document  # type: ignore
+from pyodide import JsProxy, create_proxy, to_js  # type: ignore
 
 S = TypeVar("S")
 M = TypeVar("M")
@@ -33,6 +32,7 @@ class DomNode(Node, Generic[M]):
             handler = self.handlers.get(event.type)
             if handler is not None:
                 self.dispatch(handler(event))
+
         self.listener = create_proxy(_listener)
 
     def apply(self, patch: Patch) -> None:
