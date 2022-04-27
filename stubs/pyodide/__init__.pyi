@@ -1,0 +1,6 @@
+from typing import Any, TypeAlias
+
+JsProxy: TypeAlias = Any
+
+def to_js(x: Any) -> Any: ...
+def create_proxy(f: Any) -> Any: ...
