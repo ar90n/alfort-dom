@@ -81,7 +81,7 @@ repos:
   - repo: local
     hooks:
     - id: pyright
-      args: [ --warnings, --lib ]
+      args: [ --warnings ]
       name: pyright
       entry: pyright
       language: node
