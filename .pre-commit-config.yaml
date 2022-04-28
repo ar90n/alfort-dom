@@ -26,7 +26,6 @@ repos:
     rev: ''  # add version here
     hooks:
       - id: poetry-check
-      - id: poetry-lock
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.1.0
     hooks:
