@@ -27,7 +27,6 @@ jobs:
     - uses: actions/setup-node@v2
       with:
         node-version: '16'
-        cache: npm
     - name: Setup pyright
       run: npm install -g pyright
     - name: Set up Python ${{ matrix.python-version }}
