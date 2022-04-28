@@ -5,7 +5,7 @@ from typing import Any, TypeAlias, Union
 
 from alfort import Effect, Update
 from alfort.vdom import VDom, el
-from js import document, localStorage
+from js import document, localStorage  # type: ignore
 
 from alfort_dom import AlfortDom
 
