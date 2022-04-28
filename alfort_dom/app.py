@@ -10,7 +10,7 @@ from alfort.vdom import (
     PatchText,
     Props,
 )
-from js import document  # type: ignore
+from js import HTMLElement, document  # type: ignore
 from pyodide import JsProxy, create_proxy, to_js  # type: ignore
 
 S = TypeVar("S")
@@ -18,12 +18,12 @@ M = TypeVar("M")
 
 
 class DomNode(Node, Generic[M]):
-    dom: JsProxy
+    dom: HTMLElement
     dispatch: Dispatch[M]
     handlers: dict[str, Callable[[Any], None]]
     listener: JsProxy
 
-    def __init__(self, dom: JsProxy, dispatch: Dispatch[M]) -> None:
+    def __init__(self, dom: HTMLElement, dispatch: Dispatch[M]) -> None:
         self.dom = dom
         self.dispatch = dispatch
         self.handlers = {}
