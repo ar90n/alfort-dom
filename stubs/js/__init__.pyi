@@ -2,6 +2,9 @@ from typing import Protocol
 
 from pyodide import JsProxy
 
+class Window(Protocol):
+    def requestAnimationFrame(self, callback: JsProxy) -> None: ...
+
 class Storage(Protocol):
     def setItem(self, key: str, value: str) -> None: ...
     def getItem(self, key: str) -> str: ...
@@ -41,3 +44,4 @@ class HTMLDocument(Protocol):
 
 document: HTMLDocument
 localStorage: Storage
+window: Window

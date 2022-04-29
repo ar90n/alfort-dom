@@ -10,11 +10,18 @@ from alfort.vdom import (
     PatchText,
     Props,
 )
-from js import HTMLElement, document  # type: ignore
+from js import HTMLElement, document, window  # type: ignore
 from pyodide import JsProxy, create_proxy, to_js  # type: ignore
 
 S = TypeVar("S")
 M = TypeVar("M")
+
+
+def _enqueue(render: Callable[[], None]) -> None:
+    def _render(_: Any) -> None:
+        render()
+
+    window.requestAnimationFrame(create_proxy(_render))
 
 
 class DomNode(Node, Generic[M]):
@@ -23,7 +30,9 @@ class DomNode(Node, Generic[M]):
     handlers: dict[str, Callable[[Any], None]]
     listener: JsProxy
 
-    def __init__(self, dom: HTMLElement, dispatch: Dispatch[M]) -> None:
+    def __init__(
+        self, dom: HTMLElement, dispatch: Dispatch[M] = lambda _: None
+    ) -> None:
         self.dom = dom
         self.dispatch = dispatch
         self.handlers = {}
@@ -117,15 +126,7 @@ class AlfortDom(Alfort[S, M, DomNode[M]]):
         update: Update[M, S],
         root: str,
     ) -> None:
-        def mount(node: Node) -> None:
-            if not isinstance(node, DomNode):
-                raise ValueError("node must be a DomNode")
-            dom = node.dom
-            document.getElementById(root).appendChild(dom)
-
+        root_node = DomNode[M](document.getElementById(root))
         cls._main(
-            mount=mount,
-            init=init,
-            view=view,
-            update=update,
+            init=init, view=view, update=update, root_node=root_node, enqueue=_enqueue
         )
