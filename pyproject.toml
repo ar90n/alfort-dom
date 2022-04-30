@@ -49,7 +49,7 @@ source = "git-tag"
 
 [tool.poe.tasks]
 test = "pytest"
-setup-example = { shell = "poetry build && mv dist/* examples/dist/" }
-run-example = "python -m http.server --directory examples 9898"
-install-plugins = "poetry plugin add poethepoet[poetry_plugin]"
+check = { shell = "pre-commit run -a && pyright" }
+build-example = { shell = "poetry build && mv dist/* examples/dist/" }
+run-example = {shell = "poe build-example && python -m http.server --directory examples 9898"}
 install-pre-commit = "pre-commit install"
