@@ -1,5 +1,6 @@
 # ported from https://github.com/tastejs/todomvc/blob/master/examples/elm/src/Main.elm
 import functools
+import json
 from dataclasses import asdict, dataclass, replace
 from typing import Any, TypeAlias, Union
 
@@ -12,7 +13,7 @@ from alfort_dom.event import handler
 
 
 def save_model(model: "Model") -> None:
-    local_storage["todos-alfort"] = str(asdict(model))
+    local_storage["todos-alfort"] = json.dumps(asdict(model))
 
 
 def load_model() -> "Model":
@@ -20,7 +21,7 @@ def load_model() -> "Model":
     if serialized_model is None:
         return Model(entries=[], field="", uid=0, visibility="all")
 
-    obj = eval(serialized_model)
+    obj = json.loads(serialized_model)
     obj["entries"] = [Entry(**e) for e in obj["entries"]]
     return Model(**obj)
 
