@@ -130,4 +130,4 @@ dmypy.json
 
 # Dist files
 dist
-examples/dist/*.whl
+docs/examples/dist/*.whl

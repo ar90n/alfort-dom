@@ -30,7 +30,7 @@ build-backend = "poetry.core.masonry.api"
 profile = "black"
 
 [tool.pyright]
-include = ["alfort_dom", "examples", "tests"]
+include = ["alfort_dom", "docs/examples", "tests"]
 stubPath ="stubs"
 typeCheckingMode = "strict"
 reportMissingImports = false
@@ -50,6 +50,6 @@ source = "git-tag"
 [tool.poe.tasks]
 test = "pytest"
 check = { shell = "pre-commit run -a && pyright" }
-build-example = { shell = "poetry build && mv dist/*.whl examples/dist/" }
-run-example = {shell = "poe build-example && python -m http.server --directory examples 9898"}
+build-example = { shell = "poetry build && mv dist/*.whl docs/examples/dist/" }
+run-example = {shell = "poe build-example && python -m http.server --directory docs/examples 9898"}
 install-pre-commit = "pre-commit install"
