@@ -129,4 +129,5 @@ dmypy.json
 .pyre/
 
 # Dist files
-dist/
+dist
+examples/dist/*.whl
