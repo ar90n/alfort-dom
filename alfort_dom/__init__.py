@@ -6,5 +6,10 @@ except PackageNotFoundError:
     __version__: str = "unknown"
 
 from .app import AlfortDom
+from .local_storage import LocalStorage
+from .location import Location
 
-__all__ = ["AlfortDom"]
+local_storage = LocalStorage()
+location = Location()
+
+__all__ = ["AlfortDom", "local_storage", "location"]

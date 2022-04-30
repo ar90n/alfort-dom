@@ -1,21 +1,22 @@
 # ported from https://github.com/tastejs/todomvc/blob/master/examples/elm/src/Main.elm
+import functools
 from dataclasses import asdict, dataclass, replace
-from functools import wraps
 from typing import Any, TypeAlias, Union
 
-from alfort import Effect, Update
+from alfort import Dispatch, Effect, Update
 from alfort.vdom import VDom, el
-from js import document, localStorage  # type: ignore
 
-from alfort_dom import AlfortDom
+from alfort_dom import AlfortDom, local_storage, location
+from alfort_dom.dom import HTMLElement, dom_effect
+from alfort_dom.event import handler
 
 
 def save_model(model: "Model") -> None:
-    localStorage.setItem("todos-alfort", str(asdict(model)))
+    local_storage["todos-alfort"] = str(asdict(model))
 
 
 def load_model() -> "Model":
-    serialized_model: str = localStorage.getItem("todos-alfort")
+    serialized_model: str | None = local_storage.get("todos-alfort")
     if serialized_model is None:
         return Model(entries=[], field="", uid=0, visibility="all")
 
@@ -25,7 +26,7 @@ def load_model() -> "Model":
 
 
 def with_local_storage(update: Update["Msg", "Model"]) -> Update["Msg", "Model"]:
-    @wraps(update)
+    @functools.wraps(update)
     def _update(msg: Msg, model: Model) -> tuple[Model, list[Effect[Msg]]]:
         model, effects = update(msg, model)
         return model, [lambda _: save_model(model), *effects]
@@ -34,14 +35,10 @@ def with_local_storage(update: Update["Msg", "Model"]) -> Update["Msg", "Model"]
 
 
 def visibility_from_url() -> str:
-    visibility = document.location.hash.strip("#/")
+    visibility = location.hash.strip("#/")
     if visibility not in ["all", "active", "completed"]:
         visibility = "all"
     return visibility
-
-
-def focus(id_: int) -> None:
-    document.getElementById(f"todo-{id_}").focus()
 
 
 # Model
@@ -95,7 +92,7 @@ class UpdateEntry:
 
 @dataclass(frozen=True)
 class Add:
-    pass
+    ...
 
 
 @dataclass(frozen=True)
@@ -105,7 +102,7 @@ class Delete:
 
 @dataclass(frozen=True)
 class DeleteComplete:
-    pass
+    ...
 
 
 @dataclass(frozen=True)
@@ -157,6 +154,11 @@ def update(msg: Msg, model: Model) -> tuple[Model, list[Effect[Msg]]]:
         case UpdateField(field):
             return (replace(model, field=field), [])
         case EditingEntry(id_, is_editing):
+
+            @dom_effect(f"todo-{id_}")
+            def focus(dom: HTMLElement, _: Dispatch[Msg]) -> None:
+                dom.focus()
+
             return (
                 replace(
                     model,
@@ -165,7 +167,7 @@ def update(msg: Msg, model: Model) -> tuple[Model, list[Effect[Msg]]]:
                         for e in model.entries
                     ],
                 ),
-                [lambda _: focus(id_)],
+                [focus],
             )
         case UpdateEntry(id_, task):
             return (
@@ -213,6 +215,8 @@ def update(msg: Msg, model: Model) -> tuple[Model, list[Effect[Msg]]]:
         case SetModel(new_model):
             return (new_model, [])
 
+    raise ValueError(f"Unknown message: {msg}")
+
 
 # View
 
@@ -236,17 +240,16 @@ def view(model: Model) -> VDom:
     )
 
 
-def view_input_on_input(event: Any) -> Msg:
-    return UpdateField(event.target.value)
-
-
-def view_input_on_keydown(event: Any) -> Msg:
-    if event.type == "keydown" and event.key == "Enter":
-        return Add()
-    return NoOp()
-
-
 def view_input(task: str) -> VDom:
+    @handler()
+    def on_input(event: Any) -> Msg:
+        return UpdateField(event.target.value)
+
+    @handler()
+    def on_keydown(event: Any) -> Msg:
+        if event.type == "keydown" and event.key == "Enter":
+            return Add()
+        return NoOp()
 
     return el(
         "header",
@@ -265,8 +268,8 @@ def view_input(task: str) -> VDom:
                     "autofocus": True,
                     "value": task,
                     "name": "newTodo",
-                    "onkeydown": view_input_on_keydown,
-                    "oninput": view_input_on_input,
+                    "onkeydown": on_keydown,
+                    "oninput": on_input,
                 },
                 [],
             ),
@@ -318,33 +321,12 @@ def view_entries(visibility: str, entries: list[Entry]) -> VDom:
 # View individual entries
 
 
-class Handler:
-    def __init__(self, fun: Any, key: int):
-        self.key = key
-        self.fun = fun
-
-    def __call__(self, *args: Any, **kwargs: Any) -> Msg:
-        return self.fun(*args, **kwargs)
-
-    def __eq__(self, other: Any) -> bool:
-        if not isinstance(other, Handler):
-            return False
-        return self.key == other.key
-
-
-def eq_handler(key: int) -> Any:
-    def _f(f: Any) -> Any:
-        return Handler(f, key)
-
-    return _f
-
-
 def view_entry(todo: Entry) -> VDom:
-    @eq_handler(todo.id)
+    @handler(todo.id)
     def on_input(event: Any) -> Msg:
         return UpdateEntry(todo.id, event.target.value)
 
-    @eq_handler(todo.id)
+    @handler(todo.id)
     def on_keydown(event: Any) -> Msg:
         if event.type == "keydown" and event.key == "Enter":
             return EditingEntry(todo.id, False)
@@ -463,11 +445,12 @@ def visibility_swap(url: str, visibility: str, actual_visibility: str) -> VDom:
 
 def view_controls_clear(entries_completed: int) -> VDom:
     message = f"Clear completed ({entries_completed})"
+    hidden = entries_completed == 0
     return el(
         "button",
         {
             "class": "clear-completed",
-            "hidden": (entries_completed == 0),
+            "hidden": hidden,
             "onclick": DeleteComplete(),
         },
         [message],
@@ -502,9 +485,9 @@ def info_footer() -> VDom:
     )
 
 
-AlfortDom[Model, Msg].main(
+app = AlfortDom[Model, Msg](
     init=init,
     view=view,
     update=update,
-    root="root",
 )
+app.main(root="root")

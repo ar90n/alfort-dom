@@ -69,9 +69,9 @@ def update(msg: Msg, state: dict[str, int]) -> tuple[dict[str, int], list[Effect
             return ({**state, "count": state["count"] - value}, [])
 
 
-AlfortDom[dict[str, int], Msg].main(
+app = AlfortDom[dict[str, int], Msg](
     init=init,
     view=view,
     update=update,
-    root="root",
 )
+app.main(root="root")

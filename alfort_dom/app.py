@@ -1,6 +1,6 @@
 from typing import Any, Callable, Generic, TypeVar
 
-from alfort import Alfort, Dispatch, Init, Update, View
+from alfort import Alfort, Dispatch, Enqueue, Init, Update, View
 from alfort.vdom import (
     Node,
     Patch,
@@ -17,7 +17,7 @@ S = TypeVar("S")
 M = TypeVar("M")
 
 
-def _enqueue(render: Callable[[], None]) -> None:
+def _default_enqueue(render: Callable[[], None]) -> None:
     def _render(_: Any) -> None:
         render()
 
@@ -38,8 +38,7 @@ class DomNode(Node, Generic[M]):
         self.handlers = {}
 
         def _listener(event: Any) -> None:
-            handler = self.handlers.get(event.type)
-            if handler is not None:
+            if handler := self.handlers.get(event.type):
                 self.dispatch(handler(event))
 
         self.listener = create_proxy(_listener)
@@ -78,7 +77,8 @@ class DomNode(Node, Generic[M]):
                             if callable(v):
                                 self.handlers[event_type] = v
                             else:
-                                self.handlers[event_type] = lambda _: v
+                                _v = v
+                                self.handlers[event_type] = lambda _: _v
                             self.dom.addEventListener(event_type, self.listener)
                         else:
                             self.dom.removeEventListener(event_type, self.listener)
@@ -94,17 +94,24 @@ class DomNode(Node, Generic[M]):
 
 
 class AlfortDom(Alfort[S, M, DomNode[M]]):
-    @classmethod
+    def __init__(
+        self,
+        init: Init[S, M],
+        view: View[S],
+        update: Update[M, S],
+        enqueue: Enqueue = _default_enqueue,
+    ) -> None:
+        super().__init__(init, view, update, enqueue)
+
     def create_text(
-        cls,
+        self,
         text: str,
         dispatch: Dispatch[M],
     ) -> DomNode[M]:
         return DomNode(document.createTextNode(text), dispatch)
 
-    @classmethod
     def create_element(
-        cls,
+        self,
         tag: str,
         props: Props,
         children: list[DomNode[M]],
@@ -118,15 +125,8 @@ class AlfortDom(Alfort[S, M, DomNode[M]]):
         dom_node.apply(PatchProps(remove_keys=[], add_props=props))
         return dom_node
 
-    @classmethod
     def main(
-        cls,
-        init: Init[S, M],
-        view: View[S],
-        update: Update[M, S],
+        self,
         root: str,
     ) -> None:
-        root_node = DomNode[M](document.getElementById(root))
-        cls._main(
-            init=init, view=view, update=update, root_node=root_node, enqueue=_enqueue
-        )
+        self._main(DomNode[M](document.getElementById(root)))
