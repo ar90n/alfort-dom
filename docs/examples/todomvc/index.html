@@ -16,7 +16,7 @@
         let pyodide = await loadPyodide();
         await pyodide.loadPackage("micropip");
 
-        const initScript = await fetch("./__init__.py");
+        const initScript = await fetch("./pkg_install.py");
         const initScriptText = await initScript.text();
         await pyodide.runPythonAsync(initScriptText);
 
