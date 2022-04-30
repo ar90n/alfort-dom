@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import TypeAlias, Union
+from typing import TypeAlias
 
 from alfort import Effect
 from alfort.vdom import VDom, el
@@ -17,7 +17,7 @@ class CountDown:
     value: int = 1
 
 
-Msg: TypeAlias = Union[CountUp, CountDown]
+Msg: TypeAlias = CountUp | CountDown
 
 
 def title(text: str) -> VDom:
@@ -58,7 +58,7 @@ def view(state: dict[str, int]) -> VDom:
 
 
 def init() -> tuple[dict[str, int], list[Effect[Msg]]]:
-    return ({"count": 0, "auto_inc": False}, [])
+    return ({"count": 0}, [])
 
 
 def update(msg: Msg, state: dict[str, int]) -> tuple[dict[str, int], list[Effect[Msg]]]:
