@@ -96,6 +96,8 @@ app.main(root="root")
 
 ```
 
+![simple counter](https://raw.githubusercontent.com/ar90n/alfort-dom/assets/images/example.gif)
+
 If you need more exmplaes, please check the [examples](https://github.com/ar90n/alfort-dom/tree/main/examples).
 
 ## For development
@@ -127,7 +129,7 @@ $ poetry poe run-example
 * [Alfort](https://github.com/ar90n/alfort)
 
 ## License
-[Apache-2.0](https://github.com/ar90n/alfort-dom/blob/main/LICENSE)[]
+[Apache-2.0](https://github.com/ar90n/alfort-dom/blob/main/LICENSE)
 
 
 [download-shield]: https://img.shields.io/pypi/dm/alfort-dom?style=flat
