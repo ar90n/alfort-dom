@@ -98,7 +98,7 @@ app.main(root="root")
 
 ![simple counter](https://raw.githubusercontent.com/ar90n/alfort-dom/assets/images/example.gif)
 
-If you need more exmplaes, please check the [examples](https://github.com/ar90n/alfort-dom/tree/main/examples).
+If you need more exmplaes, please check the [examples](https://github.com/ar90n/alfort-dom/tree/main/docs/examples).
 
 ## For development
 ### Install Poery plugins
