@@ -27,14 +27,12 @@ def _default_enqueue(render: Callable[[], None]) -> None:
 class DomNode(Node, Generic[M]):
     dom: HTMLElement
     dispatch: Dispatch[M]
-    handlers: dict[str, Callable[[Any], None]]
+    handlers: dict[str, Callable[[Any], M]]
     listener: JsProxy
 
-    def __init__(
-        self, dom: HTMLElement, dispatch: Dispatch[M] = lambda _: None
-    ) -> None:
+    def __init__(self, dom: HTMLElement, dispatch: Dispatch[M] | None = None) -> None:
         self.dom = dom
-        self.dispatch = dispatch
+        self.dispatch = dispatch if dispatch is not None else lambda _: None
         self.handlers = {}
 
         def _listener(event: Any) -> None:
