@@ -8,7 +8,7 @@ include = ["alfort_dom/py.typed"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-alfort = "^0.1.6"
+alfort = "^0.1.7"
 
 [tool.poetry.group.dev.dependencies]
 poethepoet = "^0.13.1"
