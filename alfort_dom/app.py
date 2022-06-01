@@ -1,6 +1,7 @@
 from typing import Any, Callable, Generic, TypeVar
 
 from alfort import Alfort, Dispatch, Enqueue, Init, Update, View
+from alfort.sub import Subscriptions
 from alfort.vdom import (
     Node,
     Patch,
@@ -98,8 +99,9 @@ class AlfortDom(Alfort[S, M, DomNode[M]]):
         view: View[S],
         update: Update[M, S],
         enqueue: Enqueue = _default_enqueue,
+        subscriptions: Subscriptions[S, M] | None = None,
     ) -> None:
-        super().__init__(init, view, update, enqueue)
+        super().__init__(init, view, update, enqueue, subscriptions)
 
     def create_text(
         self,

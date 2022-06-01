@@ -1,6 +1,6 @@
 [[package]]
 name = "alfort"
-version = "0.1.7"
+version = "0.1.8"
 description = ""
 category = "main"
 optional = false
@@ -555,12 +555,12 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "eb2a189cf9849e69daa8b0b53d74f08b435a8a9b68dc609706db5613f5f9fa62"
+content-hash = "f2835837585ce3a85788a5894b6e8c6d0b19557e55f54a16eff3efc5c8995468"
 
 [metadata.files]
 alfort = [
-    {file = "alfort-0.1.7-py3-none-any.whl", hash = "sha256:790adb99f0560e6f17b722e805f8521789e943123ba0086bd97bfea4cd1475f6"},
-    {file = "alfort-0.1.7.tar.gz", hash = "sha256:9ec74997c4fa5ab96ae1f1e9fceb63b4ebd595afb3d95a3e2da45319f2d007ba"},
+    {file = "alfort-0.1.8-py3-none-any.whl", hash = "sha256:fb07634c34d2001d8cf460b82a6f10bd808e353f2a962dad8ee63a934c1cd583"},
+    {file = "alfort-0.1.8.tar.gz", hash = "sha256:8abd15742a0aefa9f0226319145b2d71e555cfcf953f884305e7bad3241bd971"},
 ]
 atomicwrites = [
     {file = "atomicwrites-1.4.0-py2.py3-none-any.whl", hash = "sha256:6d1784dea7c0c8d4a5172b6c620f40b6e4cbfdf96d783691f2e1302a7b88e197"},
