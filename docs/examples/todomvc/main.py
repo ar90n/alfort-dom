@@ -30,7 +30,11 @@ def with_local_storage(update: Update["Msg", "Model"]) -> Update["Msg", "Model"]
     @functools.wraps(update)
     def _update(msg: Msg, model: Model) -> tuple[Model, list[Effect[Msg]]]:
         model, effects = update(msg, model)
-        return model, [lambda _: save_model(model), *effects]
+
+        async def _save_model(_: Dispatch[Msg]) -> None:
+            save_model(model)
+
+        return model, [_save_model, *effects]
 
     return _update
 
