@@ -26,7 +26,7 @@ def dom_effect(
 ) -> Callable[[Callable[[HTMLElement, Dispatch[M]], None]], Effect[M]]:
     def _wrapper(fun: Callable[[HTMLElement, Dispatch[M]], None]) -> Effect[M]:
         @functools.wraps(fun)
-        def _wrapped(dispatch: Dispatch[M]) -> None:
+        async def _wrapped(dispatch: Dispatch[M]) -> None:
             def _f(_: Any) -> None:
                 dom = document.getElementById(dom_id)
                 fun(dom, dispatch)
