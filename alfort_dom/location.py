@@ -1,6 +1,6 @@
 from typing import Any
 
-from js import location  # type: ignore
+from js import location
 
 
 class _Getter:

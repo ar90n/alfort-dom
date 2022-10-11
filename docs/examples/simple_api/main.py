@@ -3,9 +3,9 @@ from typing import Any, Callable, Coroutine, TypeAlias
 from urllib.parse import ParseResult as URL
 from urllib.parse import urlparse
 
-import pyodide.http
 from alfort import Dispatch, Effect
 from alfort.vdom import VDom, el
+from pyodide import http
 
 from alfort_dom import AlfortDom
 
@@ -41,7 +41,7 @@ Msg: TypeAlias = SelectAlbum | ReceivePhotos
 
 async def fetch_photos(album_id: int) -> list[Photo]:
     url = f"https://jsonplaceholder.typicode.com/albums/{album_id}/photos"
-    res = await pyodide.http.pyfetch(url)
+    res = await http.pyfetch(url)
     return [
         Photo(
             album_id=obj["albumId"],
