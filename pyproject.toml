@@ -38,6 +38,7 @@ stubPath ="stubs"
 typeCheckingMode = "strict"
 reportMissingImports = false
 reportMissingTypeStubs = false
+reportMissingModuleSource = false
 pythonVersion = "3.10"
 pythonPlatform = "Linux"
 

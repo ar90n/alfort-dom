@@ -2,8 +2,8 @@ import functools
 from typing import Any, Callable, Protocol, TypeVar
 
 from alfort import Dispatch, Effect
-from js import document, window  # type: ignore
-from pyodide import create_proxy  # type: ignore
+from js import document, window
+from pyodide import create_proxy
 
 M = TypeVar("M")
 

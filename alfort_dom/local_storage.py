@@ -1,7 +1,7 @@
 from collections.abc import MutableMapping
 from typing import Iterator
 
-from js import localStorage  # type: ignore
+from js import localStorage
 
 _ignore_keys = ["0_commands", "0_interpreters"]
 

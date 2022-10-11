@@ -2,8 +2,8 @@ from typing import Any, Callable, Generic, TypeAlias, TypeVar
 
 from alfort import Dispatch
 from alfort.sub import Subscription, UnSubscription, subscription
-from js import document  # type: ignore
-from pyodide import create_proxy  # type: ignore
+from js import document
+from pyodide import create_proxy
 
 Msg = TypeVar("Msg")
 Handler: TypeAlias = Callable[[Any], Msg]

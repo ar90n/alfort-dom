@@ -11,8 +11,8 @@ from alfort.vdom import (
     PatchText,
     Props,
 )
-from js import HTMLElement, document, window  # type: ignore
-from pyodide import JsProxy, create_proxy, to_js  # type: ignore
+from js import HTMLElement, document, window
+from pyodide import JsProxy, create_proxy, to_js
 
 S = TypeVar("S")
 M = TypeVar("M")
