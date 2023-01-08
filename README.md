@@ -133,7 +133,7 @@ $ poetry poe run-example
 [download-url]: https://pypi.org/project/alfort-dom/
 [version-shield]: https://img.shields.io/pypi/v/alfort-dom?style=flat
 [version-url]: https://pypi.org/project/alfort-dom/
-[build-shiled]: https://img.shields.io/github/workflow/status/ar90n/alfort-dom/CI%20testing/main
+[build-shiled]: https://img.shields.io/github/actions/workflow/status/ar90n/alfort-dom/ci.yml 
 [build-url]: https://github.com/ar90n/alfort-dom/actions/workflows/ci.yml
 [contributors-shield]: https://img.shields.io/github/contributors/ar90n/alfort-dom.svg?style=flat
 [contributors-url]: https://github.com/ar90n/alfort-dom/graphs/contributors
