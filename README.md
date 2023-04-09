@@ -93,7 +93,6 @@ app = AlfortDom[dict[str, int], Msg](
     update=update,
 )
 app.main(root="root")
-
 ```
 
 ![simple counter](https://raw.githubusercontent.com/ar90n/alfort-dom/assets/images/example.gif)
@@ -133,7 +132,7 @@ $ poetry poe run-example
 [download-url]: https://pypi.org/project/alfort-dom/
 [version-shield]: https://img.shields.io/pypi/v/alfort-dom?style=flat
 [version-url]: https://pypi.org/project/alfort-dom/
-[build-shiled]: https://img.shields.io/github/actions/workflow/status/ar90n/alfort-dom/ci-testing.yml 
+[build-shiled]: https://img.shields.io/github/actions/workflow/status/ar90n/alfort-dom/ci-testing.yml
 [build-url]: https://github.com/ar90n/alfort-dom/actions/workflows/ci-testing.yml
 [contributors-shield]: https://img.shields.io/github/contributors/ar90n/alfort-dom.svg?style=flat
 [contributors-url]: https://github.com/ar90n/alfort-dom/graphs/contributors
