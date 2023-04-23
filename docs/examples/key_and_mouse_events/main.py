@@ -82,7 +82,6 @@ def update(msg: Msg, state: State) -> tuple[State, list[Effect[Msg]]]:
 
 
 def subscriptions(state: State) -> list[Subscription[Msg]]:
-
     return [
         on_mousemove(lambda e: MouseMoved(e.pageX, e.pageY)),
         on_keypress(lambda e: KeyPressed(e.code)),
