@@ -19,6 +19,7 @@ ci:
   autofix_prs: true
   autoupdate_commit_msg: '[pre-commit.ci] pre-commit suggestions'
   autoupdate_schedule: quarterly
+  skip: [pyright]
   # submodules: true
 
 repos:
