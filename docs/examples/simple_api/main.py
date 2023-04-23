@@ -47,8 +47,8 @@ async def fetch_photos(album_id: int) -> list[Photo]:
             album_id=obj["albumId"],
             id=obj["id"],
             title=obj["title"],
-            url=urlparse(obj["url"]),
-            thumbnail_url=urlparse(obj["thumbnailUrl"]),
+            url=urlparse(str(obj["url"])),
+            thumbnail_url=urlparse(str(obj["thumbnailUrl"])),
         )
         for obj in await res.json()
     ]
