@@ -96,8 +96,7 @@ class UpdateEntry:
 
 
 @dataclass(frozen=True)
-class Add:
-    ...
+class Add: ...
 
 
 @dataclass(frozen=True)
@@ -106,8 +105,7 @@ class Delete:
 
 
 @dataclass(frozen=True)
-class DeleteComplete:
-    ...
+class DeleteComplete: ...
 
 
 @dataclass(frozen=True)
