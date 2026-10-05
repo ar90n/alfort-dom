@@ -9,16 +9,13 @@ M = TypeVar("M")
 
 
 class HTMLElement(Protocol):
-    def focus(self) -> None:
-        ...
+    def focus(self) -> None: ...
 
     @property
-    def nodeValue(self) -> str:
-        ...
+    def nodeValue(self) -> str: ...
 
     @nodeValue.setter
-    def nodeValue(self, text: str) -> None:
-        ...
+    def nodeValue(self, text: str) -> None: ...
 
 
 def dom_effect(
