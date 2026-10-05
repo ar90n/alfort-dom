@@ -12,11 +12,17 @@ class JsProxy(Any):
         self,
         *,
         depth: int = ...,
-        default_converter: Callable[
-            ["JsProxy", Callable[["JsProxy"], Any], Callable[["JsProxy", Any], None]],
-            Any,
-        ]
-        | None = ...,
+        default_converter: (
+            Callable[
+                [
+                    "JsProxy",
+                    Callable[["JsProxy"], Any],
+                    Callable[["JsProxy", Any], None],
+                ],
+                Any,
+            ]
+            | None
+        ) = ...,
     ) -> Any: ...
     def then(
         self, onfulfilled: Callable[[Any], Any], onrejected: Callable[[Any], Any]
@@ -41,10 +47,12 @@ def to_js(
     pyproxies: JsProxy | None = ...,
     create_pyproxies: bool = ...,
     dict_converter: Callable[[Iterable[JsProxy]], JsProxy] | None = ...,
-    default_converter: Callable[
-        [Any, Callable[[Any], JsProxy], Callable[[Any, JsProxy], None]], JsProxy
-    ]
-    | None = ...,
+    default_converter: (
+        Callable[
+            [Any, Callable[[Any], JsProxy], Callable[[Any, JsProxy], None]], JsProxy
+        ]
+        | None
+    ) = ...,
 ) -> JsProxy: ...
 
 class Promise(JsProxy): ...
